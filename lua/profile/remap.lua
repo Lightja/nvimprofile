@@ -27,6 +27,9 @@ vim.keymap.set("v", "<leader>d", "\"_d")
 -- ?? I put this here bc someone told me to. apparently Q is bad.
 vim.keymap.set("n", "Q", "<nop>")
 
+-- header / source file switching
+vim.keymap.set("n", "<C-o>", ":Ouroboros<CR>")
+
 -- doesnt even work on windows lmao
 vim.keymap.set("n", "<C-f>", "<cmd>silent !tmux neww tmux-sessionizer<CR>")
 vim.keymap.set("n", "<leader>f", function()
@@ -39,7 +42,7 @@ vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 
 ---CUSTOM---
 --build batch file
-vim.api.nvim_set_keymap('n', '<C-B>', ':!tools\\clean<CR>:!tools\\build<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-S-B>', ':!tools\\clean<CR>:!tools\\build<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-b>', ':!tools\\buildfast<CR>', { noremap = true, silent = true })
 
 --toggle slashes ToggleSlash defined in init.lua

@@ -1,6 +1,6 @@
 -- This file can be loaded by calling `lua require('plugins')` from your init.vim
 return require('packer').startup(function(use)
-    
+
     -- unobjectionable theme:
     use({'rose-pine/neovim', as = 'rose-pine', config = function() vim.cmd('colorscheme rose-pine') end })
 
@@ -23,7 +23,9 @@ return require('packer').startup(function(use)
 
     -- The thing that actually writes the code and comments
     use {"zbirenbaum/copilot.lua" }
-    -- use {"zbirenbaum/copilot-cmp", after = { "copilot.lua" }, config = function () require("copilot_cmp").setup() end }
+
+    -- header/source file switching
+    use { 'jakemason/ouroboros', requires = { { 'nvim-lua/plenary.nvim'} } }
 
     -- Syntax highlighting and editor power tools
     use('nvim-treesitter/nvim-treesitter', {run = ':TSUpdate'})
