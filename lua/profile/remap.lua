@@ -49,6 +49,26 @@ vim.api.nvim_set_keymap('n', '<C-b>', ':!tools\\buildfast<CR>', { noremap = true
 vim.api.nvim_set_keymap('v', '<F8>', ':ToggleSlash<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F8>', ':ToggleSlash<CR>', { noremap = true, silent = true })
 
---smart insert mode
-vim.api.nvim_set_keymap('n', 'i', ':lua _G.SmartIndentI()<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', 'a', ':lua _G.SmartIndentA()<CR>', { noremap = true, silent = true })
+
+--smart insert mode - if line is empty, tab cursor automatically, much less annoying indentation and better compatibility with copilot bound to tab
+function IsWhitespace(str)
+    --returns true if string is all whitespace
+    return str:match("^%s*$") ~= nil
+end
+function TabCursorIfLineEmpty(button)
+    local line = vim.fn.getline(".")
+    local mode = vim.api.nvim_get_mode().mode
+
+    if IsWhitespace(line) then
+        vim.api.nvim_feedkeys("cc", "n", true)
+    else
+        vim.api.nvim_feedkeys(button, mode, true)
+    end
+end
+vim.api.nvim_set_keymap('n', 'i', ':silent! lua TabCursorIfLineEmpty("i")<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'a', ':silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<Up>', '<Up><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<Down>', '<Down><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<Left>', '<Left><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('i', '<Right>', '<Right><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
+
