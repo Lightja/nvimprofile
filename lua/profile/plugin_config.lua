@@ -51,9 +51,7 @@ copilot.setup({
 ----lsp config
 local lsp = require('lsp-zero')
 --additional setup in after/plugin/nvim-cmp.lua
-
 lsp.preset('recommended')
-
 lsp.ensure_installed({
     'tsserver',
     'rust_analyzer',
@@ -64,16 +62,12 @@ lsp.ensure_installed({
 
 })
 lsp.nvim_workspace()
-
 require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
-
 lsp.set_preferences({
     sign_icons = { }
 })
-
 lsp.on_attach(function(client, bufnr)
     local opts = {buffer = bufnr, remap = false}
-
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     vim.keymap.set("n", "gd", function () vim.lsp.buf.definition() end, opts)
     vim.keymap.set("n", "K", function () vim.lsp.buf.hover() end, opts)
@@ -87,13 +81,11 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", "]d", function () vim.diagnostic.goto_prev() end, opts)
     vim.keymap.set("n", "<C-h>", function () vim.lsp.buf.signature_help() end, opts)
 end)
-
 lsp.setup()
 
 ----nvim-cmp - more lsp config
 local cmp = require('cmp')
 local luasnip = require('luasnip')
-
 --LSP Mappings, handles copilot/cmp conflicts
 cmp.setup({
         mapping = cmp.mapping.preset.insert({
@@ -124,15 +116,12 @@ cmp.setup({
 require'nvim-treesitter.configs'.setup {
   -- A list of parser names, or "all" (the five listed parsers should always be installed)
   ensure_installed = { "javascript", "typescript", "c", "lua", "vim", "vimdoc", "query", "cpp" },
-
   -- Install parsers synchronously (only applied to `ensure_installed`)
   sync_install = false,
-
   -- Automatically install missing parsers when entering buffer
   -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
   -- choco install tree-sitter for windows to download the CLI
   auto_install = true,
-
   highlight = {
     enable = true,
     additional_vim_regex_highlighting = false,
@@ -143,7 +132,6 @@ require('refactoring').setup({
     prompt_func_return_type = {
         go = false,
         java = false,
-
         cpp = false,
         c = false,
         h = false,
@@ -153,7 +141,6 @@ require('refactoring').setup({
     prompt_func_param_type = {
         go = false,
         java = false,
-
         cpp = false,
         c = false,
         h = false,
@@ -164,4 +151,49 @@ require('refactoring').setup({
     print_var_statements = {},
 })
 
+local dap = require('dap')
+local dapui = require('dapui')
+dapui.setup()
+dap.adapters.lldb = {
+    type = 'executable',
+    command = 'C:/Program Files/LLVM/bin/lldb-vscode',
+    name = "lldb"
+}
+local lldb = {
+    name = 'Launch lldb',
+    type = 'lldb',
+    request = 'launch',
+    -- program = 'build\\debug\\supportutils.exe',
+    program = function()
+        local file = io.open('build\\debug\\test\\test.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\test\\test.exe'
+        end
+        file = io.open('build\\debug\\supportutils.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\supportutils.exe'
+        end
+        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '\\', 'file')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+    runInTerminal = false;
+}
+dap.listeners.after.event_initializsation['dapui_config'] = function() dapui.open() end
+dap.listeners.after.event_terminated['dapui_config'] = function() dapui.close() end
+dap.listeners.after.event_exited['dapui_config'] = function() dapui.close() end
+dap.configurations.cpp = {lldb}
+dap.configurations.c = {lldb}
+dap.configurations.rust = {lldb}
+require ("neodev").setup ({
+    library = { plugins = {"nvim-dap-ui"}, types = true},
+})
+
+
 require("telescope").load_extension("refactoring")
+
+
+

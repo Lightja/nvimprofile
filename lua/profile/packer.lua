@@ -1,9 +1,9 @@
 return require('packer').startup(function(use)
 
-    -- unobjectionable theme:
+    -- Unobjectionable theme:
     use {'rose-pine/neovim', as = 'rose-pine', config = function() vim.cmd('colorscheme rose-pine') end }
 
-    -- Packer, plugin manager, so useful it can manage itself.
+    -- Packer, a plugin manager so useful that it can manage itself.
     use 'wbthomason/packer.nvim'
 
     -- Mandatory tpope plugins
@@ -13,11 +13,10 @@ return require('packer').startup(function(use)
 
     -- Fuzzy finder (find files, grep, etc)
     use { 'nvim-telescope/telescope.nvim', tag = '0.1.1', requires = 'nvim-lua/plenary.nvim' }
-
-    -- bonus file navigation, ctrl+q/w/e/r/t - creator works at netflix btw.
+    -- Bonus file navigation, ctrl+q/w/e/r/t - creator works at netflix btw.
     use 'theprimeagen/harpoon'
 
-    -- refactoring, debugging print statements, etc
+    -- Refactoring, debugging print statements, etc
     use {"ThePrimeagen/refactoring.nvim", requires = {"nvim-lua/plenary.nvim","nvim-treesitter/nvim-treesitter"}}
 
     -- I don't make mistakes, but everyone says this plugin is good
@@ -26,16 +25,21 @@ return require('packer').startup(function(use)
     -- The thing that actually writes the code and comments
     use "zbirenbaum/copilot.lua"
 
-    -- header/source file switching
+    -- C Header/Source file switching
     use { 'jakemason/ouroboros', requires = 'nvim-lua/plenary.nvim' }
 
     -- Syntax highlighting and editor power tools
     use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' }
     use 'nvim-treesitter/playground'
+    use 'folke/neodev.nvim'
 
-    -- diagnostics, references, telescope results, quickfix and location lists. Good for fixing things.
-    use { "folke/trouble.nvim", config = function() require("trouble").setup { icons = false, } end }
+    -- Diagnostics, references, telescope results, quickfix and location lists. Good for fixing things.
+    use { 'folke/trouble.nvim', config = function() require("trouble").setup { icons = false, } end }
 
+    -- Debugger
+    use 'mfussenegger/nvim-dap'
+    -- use 'theHamsta/nvim-dap-virtual-text'
+    use { "rcarriga/nvim-dap-ui", requires = {"mfussenegger/nvim-dap"} }
     -- LSP
     use {
         'VonHeikemen/lsp-zero.nvim', branch = 'v2.x',
