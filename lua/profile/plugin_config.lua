@@ -48,14 +48,14 @@ copilot.setup({
 })
 --telescope.load_extension('copilot')
 
-----lsp config
+--lsp config
 local lsp = require('lsp-zero')
 --additional setup in after/plugin/nvim-cmp.lua
 lsp.preset('recommended')
 lsp.ensure_installed({
     'tsserver',
     'rust_analyzer',
-    'clangd',
+    -- 'clangd',
     'lua_ls',
     'cmake',
     'gopls',
@@ -71,7 +71,7 @@ lsp.on_attach(function(client, bufnr)
     -- See `:help vim.lsp.*` for documentation on any of the below functions
     vim.keymap.set("n", "gd", function () vim.lsp.buf.definition() end, opts)
     vim.keymap.set("n", "K", function () vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "<leader>vws", function () vim.lsp.buf.workspace_symbol() end, opts)
+    vim.keymap.set("n", "<leader>vws", function () vim.lsp.buf.workspace_symbol("") end, opts)
     vim.keymap.set("n", "<leader>vd", function () vim.diagnostic.open_float() end, opts)
     vim.keymap.set("n", "[d", function () vim.diagnostic.goto_next() end, opts)
     vim.keymap.set("n", "<leader>vca", function () vim.lsp.buf.code_action() end, opts)
@@ -170,12 +170,17 @@ local lldb = {
             file:close()
             return 'build\\debug\\test\\test.exe'
         end
-        file = io.open('build\\debug\\supportutils.exe', "r")
+        file = io.open('build\\debug\\BSSProactive\\BSSProactive.exe', "r")
         if file then
             file:close()
-            return 'build\\debug\\supportutils.exe'
+            return 'build\\debug\\BSSProactive\\BSSProactive.exe'
         end
-        return vim.fn.input('Path to executable: ', vim.fn.getcwd() .. '\\', 'file')
+        file = io.open('build\\debug\\SupportUtils\\SupportUtils.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\SupportUtils\\SupportUtils.exe'
+        end
+        return vim.fin.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
     end,
     cwd = '${workspaceFolder}',
     stopOnEntry = false,

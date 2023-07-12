@@ -44,7 +44,7 @@ vim.api.nvim_set_var('clipboard', {
   },
   cache_enabled = 0,
 })
-
+-- vim.o.verbose = 1
 vim.g.dap_debug = true
 vim.g.dap_log_file = os.getenv("HOME") .. "/desktop/logs/dap.log"
 -- vim.opt.dap_debug = true
