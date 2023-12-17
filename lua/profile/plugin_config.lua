@@ -159,6 +159,40 @@ dap.adapters.lldb = {
     command = 'C:/Program Files/LLVM/bin/lldb-vscode',
     name = "lldb"
 }
+dap.adapters.codelldb = {
+    type = 'server',
+    port = "${port}",
+    executable = {command = 'c:/codelldb/extension/adapter/codelldb', args = {"--port","${port}"}},
+}
+local codelldb = {
+    name = 'Launch file',
+    type = 'codelldb',
+    request = 'launch',
+    -- program = 'build\\debug\\supportutils.exe',
+    program = function()
+        local file = io.open('build\\debug\\test\\test.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\test\\test.exe'
+        end
+        file = io.open('build\\debug\\BSSProactive\\BSSProactive.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\BSSProactive\\BSSProactive.exe'
+        end
+        file = io.open('build\\debug\\SupportUtils\\SupportUtils.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\SupportUtils\\SupportUtils.exe'
+        end
+        return vim.fin.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
+    end,
+    cwd = '${workspaceFolder}',
+    stopOnEntry = false,
+    args = {},
+    runInTerminal = false;
+}
+
 local lldb = {
     name = 'Launch lldb',
     type = 'lldb',

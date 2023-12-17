@@ -54,7 +54,11 @@ vim.api.nvim_set_keymap('n', '<C-m>', ':!tools\\buildTest<CR>', { noremap = true
 --toggle slashes ToggleSlash defined in init.lua
 vim.api.nvim_set_keymap('v', '<F8>', ':ToggleSlash<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<F8>', ':ToggleSlash<CR>', { noremap = true, silent = true })
-
+--remap b/B to s/S in normal and visual mode for stepping backwards more easily for a non-homerow typing qwerty gamer
+vim.api.nvim_set_keymap('n', 's', 'b', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', 'S', 'B', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', 's', 'b', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('v', 'S', 'B', { noremap = true, silent = true })
 --smart insert mode - if line is empty, tab cursor automatically, much less annoying indentation and better compatibility with copilot bound to tab
 --probably trash performance, will probably revisit at some point
 --still missing some edge cases, but works well enough for now
@@ -76,10 +80,8 @@ vim.keymap.set("n", "<leader>gs", vim.cmd.Git)
 --harpoon
 local mark = require("harpoon.mark")
 local ui = require("harpoon.ui")
-
-vim.keymap.set("n","<leader>a", mark.add_file)
-vim.keymap.set("n","<C-t>", ui.toggle_quick_menu)
-
+vim.keymap.set("n", "<leader>a", mark.add_file)
+vim.keymap.set("n", "<C-t>", ui.toggle_quick_menu)
 vim.keymap.set("n", "<C-q>", function() ui.nav_file(1) end)
 vim.keymap.set("n", "<C-w>", function() ui.nav_file(2) end)
 vim.keymap.set("n", "<C-e>", function() ui.nav_file(3) end)
@@ -91,37 +93,47 @@ vim.keymap.set("n", "<C-Down>", function() ui.nav_prev() end)
 vim.keymap.set("n", "<leader>tt", function() print(CursorBeforeExpectedIndentColumn()) end)
 
 --trouble
-vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", {silent = true, noremap = true})
+vim.keymap.set("n", "<leader>xq", "<cmd>TroubleToggle quickfix<cr>", { silent = true, noremap = true })
 
 --undo tree
 vim.keymap.set("n", "<leader>u", vim.cmd.UndotreeToggle)
 
 --telescope
 local builtin = require('telescope.builtin')
-vim.keymap.set('n', '<leader>ff', builtin.find_files, {})--pnuemonic: find files or fuzzy finder
+vim.keymap.set('n', '<leader>ff', builtin.find_files, {}) --pnuemonic: find files or fuzzy finder
 vim.keymap.set('n', '<C-p>', builtin.git_files, {})
 vim.keymap.set('n', '<C-f>', function() builtin.grep_string({ search = vim.fn.input("Grep > ") }); end)
 
 --Remap: Remaps for the refactoring operations. Pnuemonic 'r' for Refactor
-vim.api.nvim_set_keymap("v", "<leader>re", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("v", "<leader>rf", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("v", "<leader>rv", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("v", "<leader>ri", [[ <Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("n", "<leader>rb", [[ <Cmd>lua require('refactoring').refactor('Extract Block')<CR>]], {noremap = true, silent = true, expr = false})
-vim.api.nvim_set_keymap("n", "<leader>rbf", [[ <Cmd>lua require('refactoring').refactor('Extract Block To File')<CR>]], {noremap = true, silent = true, expr = false})
+vim.api.nvim_set_keymap("v", "<leader>re", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Function')<CR>]],
+    { noremap = true, silent = true, expr = false })
+vim.api.nvim_set_keymap("v", "<leader>rf",
+    [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Function To File')<CR>]],
+    { noremap = true, silent = true, expr = false })
+vim.api.nvim_set_keymap("v", "<leader>rv", [[ <Esc><Cmd>lua require('refactoring').refactor('Extract Variable')<CR>]],
+    { noremap = true, silent = true, expr = false })
+vim.api.nvim_set_keymap("v", "<leader>ri", [[ <Esc><Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+    { noremap = true, silent = true, expr = false })
+vim.api.nvim_set_keymap("n", "<leader>rb", [[ <Cmd>lua require('refactoring').refactor('Extract Block')<CR>]],
+    { noremap = true, silent = true, expr = false })
+vim.api.nvim_set_keymap("n", "<leader>rbf", [[ <Cmd>lua require('refactoring').refactor('Extract Block To File')<CR>]],
+    { noremap = true, silent = true, expr = false })
 -- Inline variable can also pick up the identifier currently under the cursor without visual mode
-vim.api.nvim_set_keymap("n", "<leader>ri", [[ <Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]], {noremap = true, silent = true, expr = false})
+vim.api.nvim_set_keymap("n", "<leader>ri", [[ <Cmd>lua require('refactoring').refactor('Inline Variable')<CR>]],
+    { noremap = true, silent = true, expr = false })
 -- remap to open the Telescope refactoring menu in visual mode
-vim.api.nvim_set_keymap("v", "<leader>rr","<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>", { noremap = true })
+vim.api.nvim_set_keymap("v", "<leader>rr", "<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
+    { noremap = true })
 
 -- nvim-dap debugging bindings. Pnuemonic 'd' for 'Debug'
-vim.keymap.set("n", "<leader>dt",  function() require("dapui").toggle() end)
-vim.keymap.set("n", "<leader>de",  [[<Cmd>lua require("dapui").eval()<CR>]])
-vim.keymap.set("n", "<leader>ds",  function() require("dap").continue() end)--pnuemonic: s for start
-vim.keymap.set("n", "<leader>dc",  function() require("dap").continue() end)--pnuemonic: c for continue
-vim.keymap.set("n", "<leader>dq",  function() require("dap").disconnect() end)
-vim.keymap.set("n", "<leader>dso", function() require("dap").step_over() end)--pnuemonic: o for over
-vim.keymap.set("n", "<leader>dsd", function() require("dap").step_into() end)--pnuemonic: u for up
-vim.keymap.set("n", "<leader>dsu", function() require("dap").step_out() end) --pnuemonic: d for down
-vim.keymap.set("n", "<leader>dr",  function() require("dap").run_last() end)
-vim.keymap.set("n", "<leader>db",  function() require("dap").toggle_breakpoint() end)
+vim.keymap.set("n", "<leader>dt", function() require("dapui").toggle() end)
+vim.keymap.set("n", "<leader>de", [[<Cmd>lua require("dapui").eval()<CR>]])
+vim.keymap.set("n", "<leader>ds", function() require("dap").continue() end)   --pnuemonic: s for start
+vim.keymap.set("n", "<leader>dc", function() require("dap").continue() end)   --pnuemonic: c for continue
+vim.keymap.set("n", "<leader>dq", function() require("dap").disconnect() end)
+vim.keymap.set("n", "<leader>dso", function() require("dap").step_over() end) --pnuemonic: o for over
+vim.keymap.set("n", "<leader>dsd", function() require("dap").step_into() end) --pnuemonic: u for up
+vim.keymap.set("n", "<leader>dsu", function() require("dap").step_out() end)  --pnuemonic: d for down
+vim.keymap.set("n", "<leader>dr", function() require("dap").run_last() end)
+vim.keymap.set("n", "<leader>db", function() require("dap").toggle_breakpoint() end)
+vim.keymap.set("n", "<F5>", ':lua RunPsql()<CR>', { silent = true, noremap = true })

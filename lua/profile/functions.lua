@@ -108,3 +108,17 @@ function TabCursorIfLineEmpty(button)
     end
 end
 
+function RunPsql()
+    local current_buffer = vim.fn.expand('%:t')
+    if not (current_buffer:match("%.sql$") or current_buffer:match("%.psql$")) then
+        return
+    end
+    vim.cmd("w! c:\\script.sql")
+    vim.fn.writefile(vim.fn.readfile('c:\\script.sql'), 'c:\\scriptcopy2.sql')
+    local exit_code = vim.fn.system("psql -d elle -f c:\\scriptcopy2.sql > c:\\out3.txt")
+    if exit_code ~= 0 and exit_code ~= "" then
+        print("Error running psql. Exit code: " .. exit_code)
+    end
+end
+
+
