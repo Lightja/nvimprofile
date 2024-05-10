@@ -46,10 +46,11 @@ vim.keymap.set("n", "<C-k>", "<cmd>cnext<CR>zz")
 vim.keymap.set("n", "<C-j>", "<cmd>cprev<CR>zz")
 
 --run build batch file
-vim.api.nvim_set_keymap('n', '<C-b>', ':!tools\\buildfast<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-b>', ':!tools\\build<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<C-n>', ':!tools\\clean<CR>:!tools\\build<CR>', { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '<C-m>', ':!tools\\r<CR>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('n', '<C-m>', ':!tools\\clean<CR>:!tools\\buildTest<CR>', { noremap = true, silent = true })
-vim.api.nvim_set_keymap('n', '<C-m>', ':!tools\\buildTest<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<C-m>', ':!tools\\buildTest<CR>', { noremap = true, silent = true })
 
 --toggle slashes ToggleSlash defined in init.lua
 vim.api.nvim_set_keymap('v', '<F8>', ':ToggleSlash<CR>', { noremap = true, silent = true })
@@ -126,14 +127,46 @@ vim.api.nvim_set_keymap("v", "<leader>rr", "<Esc><cmd>lua require('telescope').e
     { noremap = true })
 
 -- nvim-dap debugging bindings. Pnuemonic 'd' for 'Debug'
-vim.keymap.set("n", "<leader>dt", function() require("dapui").toggle() end)
-vim.keymap.set("n", "<leader>de", [[<Cmd>lua require("dapui").eval()<CR>]])
+vim.keymap.set("n", "<leader>dt", function() require("dapui").toggle() end)  -- TOGGLE UI
+vim.keymap.set("n", "<leader>de", [[<Cmd>lua require("dapui").eval()<CR>]])  -- EXIT UI
 vim.keymap.set("n", "<leader>ds", function() require("dap").continue() end)   --pnuemonic: s for start
 vim.keymap.set("n", "<leader>dc", function() require("dap").continue() end)   --pnuemonic: c for continue
 vim.keymap.set("n", "<leader>dq", function() require("dap").disconnect() end)
+vim.keymap.set("n", "<leader>d<Right>", function() require("dap").step_over() end) --pnuemonic: o for over
+vim.keymap.set("n", "<leader>d<Up>", function() require("dap").step_into() end) --pnuemonic: d for up
+vim.keymap.set("n", "<leader>d<Down>", function() require("dap").step_out() end)  --pnuemonic: u for down
+vim.keymap.set("n", "<leader>d<Left>", function() require("dap").step_back() end)  --pnuemonic: u for down
 vim.keymap.set("n", "<leader>dso", function() require("dap").step_over() end) --pnuemonic: o for over
-vim.keymap.set("n", "<leader>dsd", function() require("dap").step_into() end) --pnuemonic: u for up
-vim.keymap.set("n", "<leader>dsu", function() require("dap").step_out() end)  --pnuemonic: d for down
-vim.keymap.set("n", "<leader>dr", function() require("dap").run_last() end)
+vim.keymap.set("n", "<leader>dsd", function() require("dap").step_into() end) --pnuemonic: d for up
+vim.keymap.set("n", "<leader>dsu", function() require("dap").step_out() end)  --pnuemonic: u for down
+vim.keymap.set("n", "<leader>dl", function() require("dap").run_last() end)
+vim.keymap.set("n", "<leader>dr", function() require("dap").repl.open() end)
 vim.keymap.set("n", "<leader>db", function() require("dap").toggle_breakpoint() end)
+vim.keymap.set("n", "<leader>dp", function() require("dap").preview() end)
+vim.keymap.set("n", "<leader>df", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.frames)
+end)
+vim.keymap.set("n", "<leader>ds", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.scopes)
+end)
+vim.keymap.set("n", "<leader>dv", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.variables)
+end)
+vim.keymap.set("n", "<leader>di", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.inspect)
+end)
+vim.keymap.set("n", "<leader>dk", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.stacks)
+end)
+vim.keymap.set("n", "<leader>dh", function()
+    local widgets = require("dap.ui.widgets")
+    widgets.centered_float(widgets.threads).open()
+end)
+
+
 vim.keymap.set("n", "<F5>", ':lua RunPsql()<CR>', { silent = true, noremap = true })

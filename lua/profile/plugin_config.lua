@@ -55,6 +55,7 @@ lsp.preset('recommended')
 lsp.ensure_installed({
     'tsserver',
     'rust_analyzer',
+    'pyright',
     -- 'clangd',
     'lua_ls',
     'cmake',
@@ -153,7 +154,28 @@ require('refactoring').setup({
 
 local dap = require('dap')
 local dapui = require('dapui')
-dapui.setup()
+dapui.setup({
+    controls = {
+        element = "repl",
+        enabled = true,
+        icons = {
+            disconnect = "X",
+            pause = "‼",
+            play = "▸",
+            run_last = "»",
+            step_back = "←",
+            step_into = "↓",
+            step_out = "↑",
+            step_over = "→",
+            terminate = "■"
+        },
+    },
+    icons = {
+        expanded = "○",
+        current_frame = "☼",
+        collapsed = "…",
+    },
+})
 dap.adapters.lldb = {
     type = 'executable',
     command = 'C:/Program Files/LLVM/bin/lldb-vscode',
@@ -170,7 +192,12 @@ local codelldb = {
     request = 'launch',
     -- program = 'build\\debug\\supportutils.exe',
     program = function()
-        local file = io.open('build\\debug\\test\\test.exe', "r")
+        local file = io.open('build\\debug\\elleslist\\elleslist.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\elleslist\\elleslist.exe'
+        end
+        file = io.open('build\\debug\\test\\test.exe', "r")
         if file then
             file:close()
             return 'build\\debug\\test\\test.exe'
@@ -199,7 +226,12 @@ local lldb = {
     request = 'launch',
     -- program = 'build\\debug\\supportutils.exe',
     program = function()
-        local file = io.open('build\\debug\\test\\test.exe', "r")
+        local file = io.open('build\\debug\\elleslist\\elleslist.exe', "r")
+        if file then
+            file:close()
+            return 'build\\debug\\elleslist\\elleslist.exe'
+        end
+        file = io.open('build\\debug\\test\\test.exe', "r")
         if file then
             file:close()
             return 'build\\debug\\test\\test.exe'
@@ -214,7 +246,7 @@ local lldb = {
             file:close()
             return 'build\\debug\\SupportUtils\\SupportUtils.exe'
         end
-        return vim.fin.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
+        return vim.fn.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
     end,
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
@@ -229,6 +261,7 @@ dap.configurations.c = {lldb}
 dap.configurations.rust = {lldb}
 require ("neodev").setup ({
     library = { plugins = {"nvim-dap-ui"}, types = true},
+
 })
 
 
