@@ -1,4 +1,6 @@
-require("profile.packer")
+
+
+require("profile.lazy")
 require("profile.functions")
 require("profile.plugin_config")
 require("profile.set")

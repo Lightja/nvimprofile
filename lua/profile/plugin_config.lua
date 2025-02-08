@@ -1,5 +1,12 @@
-require('rose-pine').setup({
-    disable_background = true
+
+
+require'nvim-treesitter.install'.prefer_git = false
+
+
+
+require("cyberdream").setup({
+    colors = {bg = "#000000"},
+    highlights = {Comment = {fg = "#00ff00"}},
 })
 
 local copilot = require('copilot')
@@ -50,38 +57,40 @@ copilot.setup({
 
 --lsp config
 local lsp = require('lsp-zero')
---additional setup in after/plugin/nvim-cmp.lua
-lsp.preset('recommended')
-lsp.ensure_installed({
-    'tsserver',
-    'rust_analyzer',
-    'pyright',
-    -- 'clangd',
-    'lua_ls',
-    'cmake',
-    'gopls',
-
-})
-lsp.nvim_workspace()
-require('lspconfig').lua_ls.setup(lsp.nvim_lua_ls())
-lsp.set_preferences({
-    sign_icons = { }
-})
-lsp.on_attach(function(client, bufnr)
-    local opts = {buffer = bufnr, remap = false}
-    -- See `:help vim.lsp.*` for documentation on any of the below functions
-    vim.keymap.set("n", "gd", function () vim.lsp.buf.definition() end, opts)
-    vim.keymap.set("n", "K", function () vim.lsp.buf.hover() end, opts)
-    vim.keymap.set("n", "<leader>vws", function () vim.lsp.buf.workspace_symbol("") end, opts)
-    vim.keymap.set("n", "<leader>vd", function () vim.diagnostic.open_float() end, opts)
-    vim.keymap.set("n", "[d", function () vim.diagnostic.goto_next() end, opts)
-    vim.keymap.set("n", "<leader>vca", function () vim.lsp.buf.code_action() end, opts)
-    vim.keymap.set("n", "<leader>qq", function () vim.lsp.buf.code_action({apply = true}) end, opts)
-    vim.keymap.set("n", "<leader>vrr", function () vim.lsp.buf.references() end, opts)
-    vim.keymap.set("n", "<leader>vrn", function () vim.lsp.buf.rename() end, opts)
-    vim.keymap.set("n", "]d", function () vim.diagnostic.goto_prev() end, opts)
-    vim.keymap.set("n", "<C-h>", function () vim.lsp.buf.signature_help() end, opts)
-end)
+-- lsp.preset('recommended')
+lsp.setup {
+	servers = {
+		'cpp',
+		'c',
+		'lua_ls',
+		'pyright',
+		'gopls',
+		'clangd',
+		'jdtls',
+		'cmake',
+		'bat',
+		'vim',
+		'vimdoc',
+		'typescript',
+		'javascript',
+		'jdtls'
+	},
+	on_attach = function(client, bufnr)
+		local opts = {buffer = bufnr, remap = false}
+		-- See `:help vim.lsp.*` for documentation on any of the below functions
+		vim.keymap.set("n", "gd", function () vim.lsp.buf.definition() end, opts)
+		vim.keymap.set("n", "K", function () vim.lsp.buf.hover() end, opts)
+		vim.keymap.set("n", "<leader>vws", function () vim.lsp.buf.workspace_symbol("") end, opts)
+		vim.keymap.set("n", "<leader>vd", function () vim.diagnostic.open_float() end, opts)
+		vim.keymap.set("n", "[d", function () vim.diagnostic.goto_next() end, opts)
+		vim.keymap.set("n", "<leader>vca", function () vim.lsp.buf.code_action() end, opts)
+		vim.keymap.set("n", "<leader>qq", function () vim.lsp.buf.code_action({apply = true}) end, opts)
+		vim.keymap.set("n", "<leader>vrr", function () vim.lsp.buf.references() end, opts)
+		vim.keymap.set("n", "<leader>vrn", function () vim.lsp.buf.rename() end, opts)
+		vim.keymap.set("n", "]d", function () vim.diagnostic.goto_prev() end, opts)
+		vim.keymap.set("n", "<C-h>", function () vim.lsp.buf.signature_help() end, opts)
+	end
+}
 lsp.setup()
 
 ----nvim-cmp - more lsp config
@@ -90,67 +99,59 @@ local luasnip = require('luasnip')
 --LSP Mappings, handles copilot/cmp conflicts
 cmp.setup({
         mapping = cmp.mapping.preset.insert({
-        ['<C-b>'] = cmp.mapping.scroll_docs(-4),
-        ['<C-f>'] = cmp.mapping.scroll_docs(4),
-        ['<C-Space>'] = cmp.mapping.complete(),
-        ['<C-e>'] = cmp.mapping.abort(),
-        ['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-        ["<Tab>"] = cmp.mapping(function(fallback)
-            if CursorBeforeExpectedIndentColumn() then
-                fallback()
-            elseif require("copilot.suggestion").is_visible() then
-                require("copilot.suggestion").accept()
-            elseif cmp.visible() then
-                cmp.mapping.confirm({ select = false })
-            elseif luasnip.expandable() then
-                luasnip.expand()
-            elseif not LineEmpty() then
-                cmp.complete()
-            else
-                fallback()
-            end
-        end, {"i","s",}),
+			['<C-b>'] = cmp.mapping.scroll_docs(-4),
+			['<C-f>'] = cmp.mapping.scroll_docs(4),
+			['<C-Space>'] = cmp.mapping.complete(),
+			['<C-e>'] = cmp.mapping.abort(),
+			['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+			["<Tab>"] = cmp.mapping(function(fallback)
+				if CursorBeforeExpectedIndentColumn() then
+					fallback()
+				elseif require("copilot.suggestion").is_visible() then
+					require("copilot.suggestion").accept()
+				elseif cmp.visible() then
+					cmp.mapping.confirm({ select = false })
+				elseif luasnip.expandable() then
+					luasnip.expand()
+				elseif not LineEmpty() then
+					cmp.complete()
+				else
+					fallback()
+				end
+			end, {"i","s",}),
         }),
+		sources = {
+			{ name = 'nvim_lsp' },  -- cmp-nvim-lsp
+			{ name = 'luasnip' },
+			{ name = 'buffer' },   -- cmp-buffer
+			{ name = 'path' },     -- cmp-path
+			{ name = 'nvim_lua' }, -- cmp-nvim-lua
+		},
 })
 
---treesitter
-require'nvim-treesitter.configs'.setup {
-  -- A list of parser names, or "all" (the five listed parsers should always be installed)
-  ensure_installed = { "javascript", "typescript", "c", "lua", "vim", "vimdoc", "query", "cpp" },
-  -- Install parsers synchronously (only applied to `ensure_installed`)
-  sync_install = false,
-  -- Automatically install missing parsers when entering buffer
-  -- Recommendation: set to false if you don't have `tree-sitter` CLI installed locally
-  -- choco install tree-sitter for windows to download the CLI
-  auto_install = true,
-  highlight = {
-    enable = true,
-    additional_vim_regex_highlighting = false,
-  },
-}
 
-require('refactoring').setup({
-    prompt_func_return_type = {
-        go = false,
-        java = false,
-        cpp = false,
-        c = false,
-        h = false,
-        hpp = false,
-        cxx = false,
-    },
-    prompt_func_param_type = {
-        go = false,
-        java = false,
-        cpp = false,
-        c = false,
-        h = false,
-        hpp = false,
-        cxx = false,
-    },
-    printf_statements = {},
-    print_var_statements = {},
-})
+-- require('refactoring').setup({
+    -- prompt_func_return_type = {
+        -- go = false,
+        -- java = false,
+        -- cpp = false,
+        -- c = false,
+        -- h = false,
+        -- hpp = false,
+        -- cxx = false,
+    -- },
+    -- prompt_func_param_type = {
+        -- go = false,
+        -- java = false,
+        -- cpp = false,
+        -- c = false,
+        -- h = false,
+        -- hpp = false,
+        -- cxx = false,
+    -- },
+    -- printf_statements = {},
+    -- print_var_statements = {},
+-- })
 
 local dap = require('dap')
 local dapui = require('dapui')
@@ -186,67 +187,30 @@ dap.adapters.codelldb = {
     port = "${port}",
     executable = {command = 'c:/codelldb/extension/adapter/codelldb', args = {"--port","${port}"}},
 }
-local codelldb = {
-    name = 'Launch file',
-    type = 'codelldb',
-    request = 'launch',
-    -- program = 'build\\debug\\supportutils.exe',
-    program = function()
-        local file = io.open('build\\debug\\elleslist\\elleslist.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\elleslist\\elleslist.exe'
-        end
-        file = io.open('build\\debug\\test\\test.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\test\\test.exe'
-        end
-        file = io.open('build\\debug\\BSSProactive\\BSSProactive.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\BSSProactive\\BSSProactive.exe'
-        end
-        file = io.open('build\\debug\\SupportUtils\\SupportUtils.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\SupportUtils\\SupportUtils.exe'
-        end
-        return vim.fin.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
-    end,
-    cwd = '${workspaceFolder}',
-    stopOnEntry = false,
-    args = {},
-    runInTerminal = false;
-}
+-- local codelldb = {
+--     name = 'Launch file',
+--     type = 'codelldb',
+--     request = 'launch',
+--     program = FindExe(),
+--     cwd = '${workspaceFolder}',
+--     stopOnEntry = false,
+--     args = {},
+--     runInTerminal = false;
+-- }
 
 local lldb = {
     name = 'Launch lldb',
     type = 'lldb',
     request = 'launch',
-    -- program = 'build\\debug\\supportutils.exe',
-    program = function()
-        local file = io.open('build\\debug\\elleslist\\elleslist.exe', "r")
+    program = FindExe(),
+    environment = function()
+        local file = io.open(vim.fn.getcwd() .. '/vcpkg/installed/x64-windows-static/lib/libtcmalloc_minimal.lib', "r")
         if file then
             file:close()
-            return 'build\\debug\\elleslist\\elleslist.exe'
+            return {{name = "LD_PRELOAD", value = vim.fn.getcwd() .. "/vcpkg/installed/x64-windows-static/lib/libtcmalloc_minimal.lib"},
+                    {name = "HEAPPROFILE", value = vim.fn.getcwd() .. "/tmp/heapprof " .. FindExe()}}
         end
-        file = io.open('build\\debug\\test\\test.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\test\\test.exe'
-        end
-        file = io.open('build\\debug\\BSSProactive\\BSSProactive.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\BSSProactive\\BSSProactive.exe'
-        end
-        file = io.open('build\\debug\\SupportUtils\\SupportUtils.exe', "r")
-        if file then
-            file:close()
-            return 'build\\debug\\SupportUtils\\SupportUtils.exe'
-        end
-        return vim.fn.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
+        return {}
     end,
     cwd = '${workspaceFolder}',
     stopOnEntry = false,
@@ -265,7 +229,7 @@ require ("neodev").setup ({
 })
 
 
-require("telescope").load_extension("refactoring")
+-- require("telescope").load_extension("refactoring")
 
 
 

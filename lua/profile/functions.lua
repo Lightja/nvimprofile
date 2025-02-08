@@ -1,9 +1,33 @@
 function ColorMyPencils(color)
-	color = color or "rose-pine"
+	color = color or "cyberdream"
 	vim.cmd.colorscheme(color)
 
 	vim.api.nvim_set_hl(0, "Normal", { bg = "none" })
 	vim.api.nvim_set_hl(0, "NormalFloat", { bg = "none" })
+end
+
+function FindExe()
+    local file = io.open('build\\debug\\elleslist\\elleslist.exe', "r")
+    if file then
+        file:close()
+        return 'build\\debug\\elleslist\\elleslist.exe'
+    end
+    file = io.open('build\\debug\\test\\test.exe', "r")
+    if file then
+        file:close()
+        return 'build\\debug\\test\\test.exe'
+    end
+    file = io.open('build\\debug\\BSSProactive\\BSSProactive.exe', "r")
+    if file then
+        file:close()
+        return 'build\\debug\\BSSProactive\\BSSProactive.exe'
+    end
+    file = io.open('build\\debug\\SupportUtils\\SupportUtils.exe', "r")
+    if file then
+        file:close()
+        return 'build\\debug\\SupportUtils\\SupportUtils.exe'
+    end
+    return ""--vim.fn.getcwd() .. '\\' .. vim.fn.input('Path to executable: ')
 end
 
 function LineEmpty()
