@@ -1,3 +1,4 @@
 plugin/packer_compiled.lua
 pack/
 lazy-lock.json
+nvim_log.txt

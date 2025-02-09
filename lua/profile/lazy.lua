@@ -23,15 +23,7 @@ vim.g.maplocalleader = "\\"
 
 -- Setup lazy.nvim
 require("lazy").setup({
-	{"nvim-treesitter/nvim-treesitter", 
-		build = ":TSUpdate",
-		opts = {
-			ensure_installed = { "c", "lua", "vim", "vimdoc", "cpp", "query", "javascript", "typescript" },
-			sync_install = false,
-			auto_install = true,
-			highlight    = { enable = true },
-		}
-	},
+	{ 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate"},
 	{ 'tpope/vim-surround'},   																									-- tpope surrounding text (e.g. {}, "", etc)
 	{ 'tpope/vim-commentary'},   																								-- tpope comments
 	{ 'tpope/vim-fugitive'},     																								-- tpope git
@@ -41,29 +33,26 @@ require("lazy").setup({
 	{ 'zbirenbaum/copilot.lua', as= 'copilot'},																					-- copilot
 	{ 'mbbill/undotree'},																										-- undotree (<leader>u)
 	{ 'jakemason/ouroboros', dependencies = 'nvim-lua/plenary.nvim' },															-- C Header/Source file switching
-	{ 'neovim/nvim-lspconfig'},
 	{ 'folke/neodev.nvim'},                                                                                                     -- folke/neodev.nvim
 	{ 'folke/trouble.nvim', opts = { icons = false } },																			-- Diagnostics, references, telescope results, quickfix and location lists. Good for fixing things.
 	{ 'mfussenegger/nvim-dap'},   																								-- Debugger
 	{ 'rcarriga/nvim-dap-ui', name='dapui', dependencies = { "mfussenegger/nvim-dap", "nvim-neotest/nvim-nio" } },				-- Debugger UI
+	{ 'neovim/nvim-lspconfig'},   																								-- LSP Config
+	{ 'williamboman/mason.nvim'},
+	{ 'williamboman/mason-lspconfig.nvim'},
 	{ 'hrsh7th/nvim-cmp'},
+	{ 'hrsh7th/cmp-nvim-lsp'},
 	{ 'L3MON4D3/LuaSnip'},
 	{ 'rafamadriz/friendly-snippets'},
 	{ 'VonHeikemen/lsp-zero.nvim',
 		dependencies = {
-			'williamboman/mason.nvim',
-			'williamboman/mason-lspconfig.nvim',
 		}
 	},
     install = { colorscheme = { "cyberdream" } },
     checker = { enabled = true },
-	-- { 'hrsh7th/cmp-nvim-lsp'},
 	-- { 'hrsh7th/cmp-nvim-lua'},
 	-- { 'hrsh7th/cmp-buffer'},
 	-- { 'hrsh7th/cmp-path'},
 	-- { "ThePrimeagen/refactoring.nvim", dependencies = { "nvim-lua/plenary.nvim", "nvim-treesitter/nvim-treesitter" } },		-- Refactoring, debugging print statements, etc
 	-- {'nvim-treesitter/playground'},																								-- treesitter playground
 })
-local treesitter_install = require 'nvim-treesitter.install'
-treesitter_install.compilers = { "zig" }
-treesitter_install.prefer_git = false

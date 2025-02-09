@@ -67,7 +67,7 @@ function CursorBeforeExpectedIndentColumn()
     local previous_indent = vim.fn.indent(previous_line_num);
     local previous_line_text = vim.api.nvim_buf_get_text(0, previous_line_num - 1, 0, previous_line_num-1, 0, {})[1]
     -- local keywords = vim.split(vim.api.nvim_get_option('cinwords'), ',')
-    local keywords = SplitStringToTable(vim.api.nvim_get_option('cinwords'),',')
+    local keywords = SplitStringToTable(vim.api.nvim_get_option_value('cinwords',{scope="local"}),',')
     table.insert(keywords, "{")
     for _, keyword in ipairs(keywords) do
         if previous_line_text:match(keyword) then
