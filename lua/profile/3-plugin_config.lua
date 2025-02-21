@@ -35,21 +35,29 @@ vim.api.nvim_create_autocmd('LspAttach', {desc = 'LSP actions',
 	end
 })
 
+local function get_root_dir(filename, bufnr) local root_dir = vim.fs.root(bufnr,'.git'); print("SET ROOT_DIR("..tostring(bufnr).."): "..root_dir); return root_dir end
 
 local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
+local lpsconfig = require('lspconfig')
+require('lspconfig').util.default_config = vim.tbl_extend( "force", require('lspconfig').util.default_config, { root_dir = get_root_dir })
+-- local default_setup = function(server)
+--   lspconfig[server].setup({
+--     capabilities = lsp_capabilities,
+--     root_dir = 
+--   })
+-- end
 
-local default_setup = function(server)
-  require('lspconfig')[server].setup({
-    capabilities = lsp_capabilities,
-  })
-end
 
-require'lspconfig'.lua_ls.setup{
-	cmd = {"C:/Users/Lightja/scoop/shims/lua-language-server.exe"}
+-- vim.api.nvim_create_autocmd('BufEnter', {group = vim.api.nvim_create_augroup('neovim_auto_root',{}), callback = auto_set_root})
+
+require('lspconfig').lua_ls.setup{
+	cmd = {"C:/Users/Lightja/scoop/shims/lua-language-server.exe"},
+	root_dir = get_root_dir
 }
 
-require'lspconfig'.clangd.setup{
-	cmd = {"C:/Program Files/LLVM/bin/clangd.exe"}
+require('lspconfig').clangd.setup{
+	cmd = {"C:/Program Files/LLVM/bin/clangd.exe"},
+	root_dir = get_root_dir
 }
 
 require('mason').setup({})
@@ -83,12 +91,14 @@ cmp.setup({
 		{ name = 'nvim_lua' }, -- cmp-nvim-lua
 	},
 	mapping = cmp.mapping.preset.insert({
-		['<C-b>'] = cmp.mapping.scroll_docs(-4),
-		['<C-f>'] = cmp.mapping.scroll_docs(4),
+		['<C-b>']     = cmp.mapping.scroll_docs(-4),
+		['<C-f>']     = cmp.mapping.scroll_docs(4),
 		['<C-Space>'] = cmp.mapping.complete(),
-		['<C-e>'] = cmp.mapping.abort(),
-		['<CR>'] = cmp.mapping.confirm({ select = false }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
-		["<Tab>"] = cmp.mapping(function(fallback)
+		['<C-e>']     = cmp.mapping.abort(),
+        ['<Esc>']     = cmp.mapping.abort(),
+		['<CR>']      = cmp.mapping.confirm({ select = false }),
+        ['<C-Tab>']   = cmp.mapping.select_next_item({behavior=cmp.SelectBehavior.Select}),
+		["<Tab>"]     = cmp.mapping(function(fallback)
 			if CursorBeforeExpectedIndentColumn() then
 				fallback()
 			elseif require("copilot.suggestion").is_visible() then
@@ -137,13 +147,13 @@ dapui.setup({
     },
 })
 dap.adapters.lldb = {
-    type = 'executable',
+    type    = 'executable',
     command = 'C:/Users/Lightja/scoop/apps/mingw-winlibs-llvm-ucrt/14.2.0-19.1.1-12.0.0-r2/bin/lldb-dap.exe',
-    name = "lldb"
+    name    = "lldb"
 }
 dap.adapters.codelldb = {
-    type = 'server',
-    port = "${port}",
+    type       = 'server',
+    port       = "${port}",
     executable = {command = 'c:/codelldb/extension/adapter/codelldb', args = {"--port","${port}"}},
 }
 
@@ -174,31 +184,30 @@ dap.configurations.c    = {lldb}
 dap.configurations.rust = {lldb}
 require ("neodev").setup ({
     library = { plugins = {"nvim-dap-ui"}, types = true},
-
 })
 
 
 local copilot = require('copilot')
 copilot.setup({
   panel = {
-    enabled = true,
-    auto_refresh = false,
+    enabled       = true,
+    auto_refresh  = false,
     keymap = {
-      jump_prev = "[[",
-      jump_next = "]]",
-      accept    = "<CR>",
-      refresh   = "gr",
-      open      = "<M-CR>"
+      jump_prev   = "[[",
+      jump_next   = "]]",
+      accept      = "<CR>",
+      refresh     = "gr",
+      open        = "<M-CR>"
     },
     layout = {
-      position = "bottom", -- | top | left | right
-      ratio    = 0.4
+      position    = "bottom", -- | top | left | right
+      ratio       = 0.4
     },
   },
   suggestion = {
-    enabled      = true,
-    auto_trigger = false,
-    debounce     = 75,
+    enabled       = true,
+    auto_trigger  = false,
+    debounce      = 75,
     keymap = {
       accept      = "<S-Tab>",
       accept_word = false,
@@ -209,16 +218,16 @@ copilot.setup({
     },
   },
   filetypes = {
-    yaml      = false,
-    markdown  = false,
-    help      = false,
-    gitcommit = false,
-    gitrebase = false,
-    hgcommit  = false,
-    svn       = false,
-    cvs       = false,
-    ["."]     = false,
+    yaml          = false,
+    markdown      = false,
+    help          = false,
+    gitcommit     = false,
+    gitrebase     = false,
+    hgcommit      = false,
+    svn           = false,
+    cvs           = false,
+    ["."]         = false,
   },
-  copilot_node_command = 'node',
+  copilot_node_command  = 'node',
   server_opts_overrides = {},
 })

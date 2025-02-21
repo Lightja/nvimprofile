@@ -144,5 +144,3 @@ function RunPsql()
         print("Error running psql. Exit code: " .. exit_code)
     end
 end
-
-
