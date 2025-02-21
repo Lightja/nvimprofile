@@ -1,7 +1,3 @@
-
-
-
-
 vim.opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
 
 
@@ -51,6 +47,7 @@ vim.api.nvim_set_var('clipboard', {
 })
 -- vim.o.verbose = 1
 vim.g.dap_debug = true
+vim.g.undotree_DiffCommand = "FC"
 vim.g.dap_log_file = os.getenv("HOME") .. "/desktop/logs/dap.log"
 -- vim.opt.dap_debug = true
 -- vim.opt.dap_log_file = os.getenv("HOME") .. "/desktop/logs/dap.log"

@@ -3,6 +3,8 @@ local treesitter_install = require 'nvim-treesitter.install'
 local treesitter_config  = require 'nvim-treesitter.configs'
 treesitter_install.compilers = { "zig" }
 treesitter_install.prefer_git = false
+treesitter_config.setup { highlight = { enable = true } }
+
 
 require("cyberdream").setup({
     colors = {bg = "#000000"},
@@ -68,27 +70,8 @@ require('mason-lspconfig').setup({
 	handlers = {default_setup}
 })
 
--- require('mason-lspconfig').setup({
-  -- ensure_installed = {},
-  -- handlers = {
-    -- default_setup,
-    -- lua_ls = function()
-		-- require('lspconfig').lua_ls.setup({
-			-- capabilities = lsp_capabilities,
-			-- settings = {
-				-- Lua = {
-					-- runtime = {version = 'LuaJIT'},
-					-- diagnostics = {globals = {'vim'}},
-					-- workspace = {library = {vim.env.VIMRUNTIME}	}
-				-- }
-			-- }
-		-- })
-    -- end,
-  -- },
--- })
-
 ----nvim-cmp - more lsp config
-local cmp = require('cmp')
+local cmp     = require('cmp')
 local luasnip = require('luasnip')
 --LSP Mappings, handles copilot/cmp conflicts
 cmp.setup({
@@ -137,20 +120,20 @@ dapui.setup({
         enabled = true,
         icons = {
             disconnect = "X",
-            pause = "‼",
-            play = "▸",
-            run_last = "»",
-            step_back = "←",
-            step_into = "↓",
-            step_out = "↑",
-            step_over = "→",
-            terminate = "■"
+            pause      = "‼",
+            play       = "▸",
+            run_last   = "»",
+            step_back  = "←",
+            step_into  = "↓",
+            step_out   = "↑",
+            step_over  = "→",
+            terminate  = "■"
         },
     },
     icons = {
-        expanded = "○",
+        expanded      = "○",
         current_frame = "☼",
-        collapsed = "…",
+        collapsed     = "…",
     },
 })
 dap.adapters.lldb = {
@@ -165,29 +148,29 @@ dap.adapters.codelldb = {
 }
 
 local lldb = {
-    name = 'Launch lldb',
-    type = 'lldb',
-    request = 'launch',
-    program = FindExe(),
+    name        = 'Launch lldb',
+    type        = 'lldb',
+    request     = 'launch',
+    program     = FindExe(),
     environment = function()
         local file = io.open(vim.fn.getcwd() .. '/vcpkg/installed/x64-windows-static/lib/libtcmalloc_minimal.lib', "r")
         if file then
             file:close()
-            return {{name = "LD_PRELOAD", value = vim.fn.getcwd() .. "/vcpkg/installed/x64-windows-static/lib/libtcmalloc_minimal.lib"},
+            return {{name = "LD_PRELOAD", value  = vim.fn.getcwd() .. "/vcpkg/installed/x64-windows-static/lib/libtcmalloc_minimal.lib"},
                     {name = "HEAPPROFILE", value = vim.fn.getcwd() .. "/tmp/heapprof " .. FindExe()}}
         end
         return {}
     end,
-    cwd = '${workspaceFolder}',
-    stopOnEntry = false,
-    args = {},
+    cwd           = '${workspaceFolder}',
+    stopOnEntry   = false,
+    args          = {},
     runInTerminal = false;
 }
-dap.listeners.after.event_initializsation['dapui_config'] = function() dapui.open() end
-dap.listeners.after.event_terminated['dapui_config'] = function() dapui.close() end
-dap.listeners.after.event_exited['dapui_config'] = function() dapui.close() end
-dap.configurations.cpp = {lldb}
-dap.configurations.c = {lldb}
+dap.listeners.after.event_initializsation['dapui_config'] = function() dapui.open()  end
+dap.listeners.after.event_terminated['dapui_config']      = function() dapui.close() end
+dap.listeners.after.event_exited['dapui_config']          = function() dapui.close() end
+dap.configurations.cpp  = {lldb}
+dap.configurations.c    = {lldb}
 dap.configurations.rust = {lldb}
 require ("neodev").setup ({
     library = { plugins = {"nvim-dap-ui"}, types = true},
@@ -203,67 +186,39 @@ copilot.setup({
     keymap = {
       jump_prev = "[[",
       jump_next = "]]",
-      accept = "<CR>",
-      refresh = "gr",
-      open = "<M-CR>"
+      accept    = "<CR>",
+      refresh   = "gr",
+      open      = "<M-CR>"
     },
     layout = {
       position = "bottom", -- | top | left | right
-      ratio = 0.4
+      ratio    = 0.4
     },
   },
   suggestion = {
-    enabled = true,
-    auto_trigger = true,
-    debounce = 75,
+    enabled      = true,
+    auto_trigger = false,
+    debounce     = 75,
     keymap = {
-      accept = "<S-Tab>",
+      accept      = "<S-Tab>",
       accept_word = false,
       accept_line = false,
-      next = "<M-]>",
-      prev = "<M-[>",
-      dismiss = "<C-]>",
+      next        = "<C-Tab>",
+      prev        = "<M-[>",
+      dismiss     = "<C-]>",
     },
   },
   filetypes = {
-    yaml = false,
-    markdown = false,
-    help = false,
+    yaml      = false,
+    markdown  = false,
+    help      = false,
     gitcommit = false,
     gitrebase = false,
-    hgcommit = false,
-    svn = false,
-    cvs = false,
-    ["."] = false,
+    hgcommit  = false,
+    svn       = false,
+    cvs       = false,
+    ["."]     = false,
   },
-  copilot_node_command = 'node', -- Node.js version must be > 16.x
+  copilot_node_command = 'node',
   server_opts_overrides = {},
 })
---telescope.load_extension('copilot')
-
-
-
-
--- require('refactoring').setup({
-    -- prompt_func_return_type = {
-        -- go = false,
-        -- java = false,
-        -- cpp = false,
-        -- c = false,
-        -- h = false,
-        -- hpp = false,
-        -- cxx = false,
-    -- },
-    -- prompt_func_param_type = {
-        -- go = false,
-        -- java = false,
-        -- cpp = false,
-        -- c = false,
-        -- h = false,
-        -- hpp = false,
-        -- cxx = false,
-    -- },
-    -- printf_statements = {},
-    -- print_var_statements = {},
--- })
--- require("telescope").load_extension("refactoring")
