@@ -60,18 +60,11 @@ vim.api.nvim_set_keymap('n', 's', 'b', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'S', 'B', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', 's', 'b', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('v', 'S', 'B', { noremap = true, silent = true })
---smart insert mode - if line is empty, tab cursor automatically, much less annoying indentation and better compatibility with copilot bound to tab
---probably trash performance, will probably revisit at some point
---still missing some edge cases, but works well enough for now
 
 vim.api.nvim_set_keymap('n', 'i', ':silent! lua TabCursorIfLineEmpty("i")<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', 'a', ':silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('i', '<Up>', '<Up><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('i', '<Down>', '<Down><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('i', '<Left>', '<Left><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('i', '<Right>', '<Right><Esc>:silent! lua TabCursorIfLineEmpty("a")<CR>', { noremap = true, silent = true })
 
--- create header for c++ function on cursor, requires ourobouros
+-- create header for c++ function on cursor, requires ourobouros, needs more robust handling for struct/class functs
 vim.api.nvim_set_keymap('n', '<leader>h', '^vt)ly:Ouroboros<CR>ggvi{<Esc>o<Esc>pa;<Esc>==', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>qq', '<leader>vca1<CR>', { noremap = true, silent = true })
 

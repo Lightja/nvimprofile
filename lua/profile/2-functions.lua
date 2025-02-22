@@ -36,6 +36,13 @@ function LineEmpty()
   return vim.api.nvim_buf_get_text(0, line-1, 0, line-1, col, {})[1]:match("^%s*$") ~= nil
 end
 
+function toggle_copilot_suggestion()
+    local copilot_suggestion = require("copilot.suggestion")
+    if copilot_suggestion.is_visible() then copilot_suggestion.dismiss() end
+    copilot_suggestion.toggle_auto_trigger()
+    print("TOGGLED COPILOT SUGGESTION.")
+end
+
 -- function ExpectedIndentColumn()
     -- local line, col = unpack(vim.api.nvim_win_get_cursor(0))
     -- local line_text = vim.api.nvim_buf_get_lines(0, line-1, line, false)[1]

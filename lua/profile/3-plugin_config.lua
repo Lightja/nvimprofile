@@ -5,7 +5,6 @@ treesitter_install.compilers = { "zig" }
 treesitter_install.prefer_git = false
 treesitter_config.setup { highlight = { enable = true } }
 
-
 require("cyberdream").setup({
     colors = {bg = "#000000"},
     highlights = {Comment = {fg = "#00ff00"}},
@@ -35,20 +34,7 @@ vim.api.nvim_create_autocmd('LspAttach', {desc = 'LSP actions',
 	end
 })
 
-local function get_root_dir(filename, bufnr) local root_dir = vim.fs.root(bufnr,'.git'); print("SET ROOT_DIR("..tostring(bufnr).."): "..root_dir); return root_dir end
-
-local lsp_capabilities = require('cmp_nvim_lsp').default_capabilities()
-local lpsconfig = require('lspconfig')
-require('lspconfig').util.default_config = vim.tbl_extend( "force", require('lspconfig').util.default_config, { root_dir = get_root_dir })
--- local default_setup = function(server)
---   lspconfig[server].setup({
---     capabilities = lsp_capabilities,
---     root_dir = 
---   })
--- end
-
-
--- vim.api.nvim_create_autocmd('BufEnter', {group = vim.api.nvim_create_augroup('neovim_auto_root',{}), callback = auto_set_root})
+local function get_root_dir(filename, bufnr) local root_dir = vim.fs.root(bufnr,'.git'); print("FOUND ROOT_DIR("..tostring(bufnr).."): "..root_dir); return root_dir end
 
 require('lspconfig').lua_ls.setup{
 	cmd = {"C:/Users/Lightja/scoop/shims/lua-language-server.exe"},
@@ -95,9 +81,8 @@ cmp.setup({
 		['<C-f>']     = cmp.mapping.scroll_docs(4),
 		['<C-Space>'] = cmp.mapping.complete(),
 		['<C-e>']     = cmp.mapping.abort(),
-        ['<Esc>']     = cmp.mapping.abort(),
 		['<CR>']      = cmp.mapping.confirm({ select = false }),
-        ['<C-Tab>']   = cmp.mapping.select_next_item({behavior=cmp.SelectBehavior.Select}),
+        ['<C-S>']     = cmp.mapping(toggle_copilot_suggestion),
 		["<Tab>"]     = cmp.mapping(function(fallback)
 			if CursorBeforeExpectedIndentColumn() then
 				fallback()
@@ -204,17 +189,13 @@ copilot.setup({
       ratio       = 0.4
     },
   },
-  suggestion = {
+suggestion = {
     enabled       = true,
-    auto_trigger  = false,
+    auto_trigger  = false, --default to disabled to prevent early onset alzheimers, C-s to toggle on/off
     debounce      = 75,
     keymap = {
-      accept      = "<S-Tab>",
       accept_word = false,
       accept_line = false,
-      next        = "<C-Tab>",
-      prev        = "<M-[>",
-      dismiss     = "<C-]>",
     },
   },
   filetypes = {
@@ -229,5 +210,12 @@ copilot.setup({
     ["."]         = false,
   },
   copilot_node_command  = 'node',
-  server_opts_overrides = {},
+  server_opts_overrides = {
+      settings = {
+          advanced = {
+              listCount = 1,--trying to limit to 1 line suggestions but I dont think its possible currently.
+              inlineSuggestCount = 1
+            }
+        }
+  },
 })
