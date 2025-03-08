@@ -171,7 +171,6 @@ require ("neodev").setup ({
     library = { plugins = {"nvim-dap-ui"}, types = true},
 })
 
-
 local copilot = require('copilot')
 copilot.setup({
   panel = {
@@ -212,9 +211,11 @@ suggestion = {
   copilot_node_command  = 'node',
   server_opts_overrides = {
       settings = {
-          advanced = {
-              listCount = 1,--trying to limit to 1 line suggestions but I dont think its possible currently.
-              inlineSuggestCount = 1
+          advanced = {--trying to limit to 1 line suggestions, but I dont think its possible currently.
+              -- listCount = 1,
+              -- inlineSuggestCount = 1,
+              -- length=1,
+              -- SolutionLength=1,
             }
         }
   },
